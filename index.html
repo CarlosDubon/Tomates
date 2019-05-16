@@ -19,7 +19,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="">Temperatura del exterior:</label>
-                    <input name="te" type="text" placeholder="19°C - 35°C" class='form-control'>
+                    <input name="te" type="text" placeholder="19°C - 25°C" class='form-control'>
                 </div>
                 <div class="form-group">
                     <label for="">Temperatura del interior:</label>
@@ -58,19 +58,63 @@
 <script>
     var radiacionCollection = [0,0,0,0,0,0,0,161.16666667,274.1111111,384.8055556,473.0833333,522.0277778,522.0277778,473.0833333,384.8055556,274.1111111,161.1666667,0,0,0,0,0,0,0]
     var errorMsg = document.getElementById("error_msg")
-    var te = document.getElementsByName("te")
-    var ti = document.getElementsByName("ti")
+    var te = document.getElementsByName("te")[0]
+    var ti = document.getElementsByName("ti")[0]
     var ts = document.getElementById("ts")
-    var superficie = document.getElementsByName("tipo_superficie")
-    var horaSelect = document.getElementsByName("hora")
+    var superficie = document.getElementsByName("tipo_superficie")[0]
+    var horaSelect = document.getElementsByName("hora")[0]
 
     for (let h = 0; h < 24; h++) {
         var optionEle = document.createElement("option")
         optionEle.value = radiacionCollection[h];
         optionEle.text = h + ":30"
-        horaSelect[0].appendChild(optionEle);
+        horaSelect.appendChild(optionEle);
     }
 
+
+    function getRn(){
+        return 16 * (parseFloat(horaSelect.value) * (0.03 + 0.89 + getAlfaS()))   
+    }
+    function getAlfaS(){
+        return 0.75 * 0.70 * getAlfaSue() * (1-0.70)
+    }
+    function getAlfaSue(){
+        return 1-superficie.value
+    }
+    function getQcc(){
+        return 16 * getKcc()*(parseFloat(ti.value) - parseFloat(te.value) )
+    }
+    function getKcc(){
+        return 1/((1/getHi())+(0.004/0.76)+(1/getHe()))
+    }
+    function getHi(){
+        if((te.value - ti.value)<=11.1){
+            return 1.95 * Math.pow((parseFloat(te.value) - parseFloat(ti.value) ),0.3);
+        }else{
+            return 7.2
+        }
+    }
+    function getV(){
+        return 6
+    }
+    function getHe(){
+        return 2.8 + (1.2 * getV())
+    }
+    function getQevp(){
+        return 150 * ( 0.2 * getRn() + 5.5 * getDPV() )
+    }
+    function getDPV(){
+        return (getEs() * parseFloat(ti.value)) - getEi()
+    }
+    function getEs(){
+        return (6.1078 * Math.pow(Math.E,((17.269*parseFloat(te.value))/(parseFloat(te.value)+237.3))))/0.1
+    }
+    function getEi(){
+        return 101.3 * Math.pow(((293 - 0.0065 * 770)/293),5.26) 
+    }
+    function getQsue(){
+        return ((superficie.value=="0.02")? 7.7:(superficie.value=="0.09")?4.4:2.0) * 150 * (parseFloat(ti.value) - parseFloat(ts.value)) / 0.4
+    }
 
 </script>
 </html>
