@@ -45,6 +45,9 @@
 
                     </select>
                 </div>
+                <p id="result">
+
+                </p>
             </div>
             <div class="col-md-12">
                 <div class="form-group">
@@ -60,9 +63,16 @@
     var errorMsg = document.getElementById("error_msg")
     var te = document.getElementsByName("te")[0]
     var ti = document.getElementsByName("ti")[0]
-    var ts = document.getElementById("ts")
+    var ts = document.getElementsByName("ts")[0]
     var superficie = document.getElementsByName("tipo_superficie")[0]
     var horaSelect = document.getElementsByName("hora")[0]
+    var btnCalc = document.getElementById("start")
+    var result = document.getElementById("result")
+
+    btnCalc.addEventListener('click',()=>{
+        result.textContent = getQcc() + getQevp() + getQsue() - getRn()
+    })
+
 
     for (let h = 0; h < 24; h++) {
         var optionEle = document.createElement("option")
@@ -113,7 +123,7 @@
         return 101.3 * Math.pow(((293 - 0.0065 * 770)/293),5.26) 
     }
     function getQsue(){
-        return ((superficie.value=="0.02")? 7.7:(superficie.value=="0.09")?4.4:2.0) * 150 * (parseFloat(ti.value) - parseFloat(ts.value)) / 0.4
+        return (((superficie.value=="0.02")? 7.7:(superficie.value=="0.09")?4.4:2.0) * 150 * (parseFloat(ti.value) - parseFloat(ts.value)) )/ 0.4
     }
 
 </script>
