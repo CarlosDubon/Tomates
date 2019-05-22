@@ -117,13 +117,13 @@
         return 2.8 + (1.2 * getV())
     }
     function getQevp(){
-        return 150 * ( 0.2 * getRn() + 5.5 * getDPV() )
+        return 150 * ( 0.2 * getRn() + 5.5 * getDPV() + 5.3 *6)
     }
     function getDPV(){
         return (getEs() * parseFloat(ti.value)) - getEi()
     }
     function getEs(){
-        return (6.1078 * Math.pow(Math.E,((17.269*parseFloat(te.value))/(parseFloat(te.value)+237.3))))/0.1
+        return (6.1078 * (Math.pow(Math.E,((17.269*parseFloat(te.value))/(parseFloat(te.value)+273.3)))))/10
     }
     function getEi(){
         return 101.3 * Math.pow(((293 - 0.0065 * 770)/293),5.26) 
